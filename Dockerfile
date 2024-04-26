@@ -1,13 +1,14 @@
 FROM ubuntu:latest
+
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN apt-get update && \
     apt-get install -y \
     # common set of tools for managing software repositories in Ubuntu
     software-properties-common \
     wget \
     curl
-
-ENV TZ=Europe/Berlin
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install gcc 13
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
