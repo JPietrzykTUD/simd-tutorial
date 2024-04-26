@@ -66,4 +66,4 @@ case $COMPILER in
     ;;
 esac
 
-cexpl --compiler ${COMPILER} compare --cflags "${FLAGS}" $FILE_PATH
+cexpl --compiler ${COMPILER} --compare --cflags "${FLAGS}" $FILE_PATH
