@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:23.04
 RUN apt-get update && \
     apt-get install -y \
     # common set of tools for managing software repositories in Ubuntu
