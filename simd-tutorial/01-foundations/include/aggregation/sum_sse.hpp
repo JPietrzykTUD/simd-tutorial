@@ -1,0 +1,63 @@
+/*******************************************************************************************************************************
+  This file is part of the SIGMOD'24 tutorial: SIMDified Data Processing-Foundations, Abstraction, and Advanced Techniques [1].
+  Authors of the file: Johannes Pietrzyk, Dirk Habich.
+  [1] https://doi.org/10.1145/3626246.3654694
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************************************************************/
+#ifndef COMPILER_EXPLORER
+#pragma once
+#endif
+
+#include <cstdint>
+#include <cstddef>
+#include <immintrin.h>
+
+
+#ifdef COMPILER_EXPLORER
+#define FORCE_INLINE
+#else
+#define FORCE_INLINE __attribute__((always_inline)) inline
+#endif
+
+
+FORCE_INLINE void aggregate_sse(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+  /* Calculate pointers for SIMD processing and scalar remainder */
+  const auto remainder = element_count & 0x3;
+  element_count -= remainder;
+  /* Initialize result and pointers for SIMD processing */
+  __m128i result_arr = _mm_setzero_si128();
+  __m128i const * const src_simd_end = reinterpret_cast<__m128i const *>(src + element_count);
+  __m128i const * src_simd_current = reinterpret_cast<__m128i const *>(src);
+  /* Calculate pointers for remainder processing */
+  auto src_remainder = src + element_count;
+  auto const src_end = src_remainder + remainder;
+  /* Start SIMD processing*/
+  while (src_simd_current != src_simd_end) {
+    __m128i src_vec = _mm_loadu_si128(src_simd_current);
+    result_arr = _mm_add_epi32(result_arr, src_vec);
+    ++src_simd_current;
+  }
+
+  auto res1 = _mm_srli_si128(result_arr, 8);
+  result_arr = _mm_add_epi32(result_arr, res1);
+  auto res2 = _mm_srli_si128(result_arr, 4);
+  result_arr = _mm_add_epi32(result_arr, res2);
+  uint32_t result = _mm_cvtsi128_si32(result_arr);
+  /* Start remainder processing */
+  while (src_remainder != src_end) {
+    result += *src++;
+  }
+  *dst = result;
+}
+
