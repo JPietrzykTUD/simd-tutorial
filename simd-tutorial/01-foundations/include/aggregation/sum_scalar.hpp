@@ -28,7 +28,7 @@
 #define FORCE_INLINE __attribute__((always_inline)) inline
 #endif
 
-FORCE_INLINE void aggregate_scalar(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_scalar(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   uint32_t result = 0;
   for(auto i = 0ull; i < element_count; ++i) {
     result += src[i];

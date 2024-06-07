@@ -32,7 +32,7 @@
 #define VECTOR_COUNT 4
 #endif
 
-FORCE_INLINE void aggregate_nested_loop(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_nested_loop(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   /* Calculate pointers for SIMD processing and scalar remainder */
   const auto remainder = element_count & (VECTOR_COUNT - 1);
   element_count -= remainder;

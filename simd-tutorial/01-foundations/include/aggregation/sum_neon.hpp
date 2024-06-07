@@ -31,7 +31,7 @@
 #endif
 
 
-FORCE_INLINE void aggregate_neon(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_neon(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   /* Calculate pointers for SIMD processing and scalar remainder */
   const auto remainder = element_count & 0x3;
   element_count -= remainder;

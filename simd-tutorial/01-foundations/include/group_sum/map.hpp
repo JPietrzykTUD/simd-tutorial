@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************************************************************/
+#include <unordered_map>
 #ifndef COMPILER_EXPLORER
 #pragma once
 #endif
@@ -44,4 +45,21 @@ struct simple_map_soa {
     delete[] keys;
     delete[] values;
   }
+
+  friend bool operator==(simple_map_soa const & left, simple_map_soa const & right);
 };
+
+bool operator==(simple_map_soa const & left, simple_map_soa const & right) {
+  if (left.entry_count != right.entry_count) {
+    return false;
+  }
+  std::unordered_map<uint32_t, uint32_t> left_map;
+  std::unordered_map<uint32_t, uint32_t> right_map;
+
+  for (auto i = 0; i < left.entry_count; ++i) {
+    left_map[left.keys[i]] = left.values[i];
+    right_map[right.keys[i]] = right.values[i];
+  }
+
+  return (left_map == right_map);
+}

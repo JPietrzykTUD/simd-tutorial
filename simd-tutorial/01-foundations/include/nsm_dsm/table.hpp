@@ -45,14 +45,25 @@ struct table_nsm {
   };
   row * const rows;
   size_t const row_count;
-  explicit table_dsm(size_t row_count)
-  : col0(new uint32_t[entry_count]),
-    col1(new uint32_t[entry_count]),
-    entry_count(entry_count){ }
-  table_dsm(table_dsm const & f) = default;
-  table_dsm(table_dsm && f) = default;
-  ~table_dsm() {
-    delete[] col0;
-    delete[] col1;
+  explicit table_nsm(size_t row_count)
+  : rows(new row[row_count]),
+    row_count(row_count){ }
+  table_nsm(table_nsm const & f) = default;
+  table_nsm(table_nsm && f) = default;
+  ~table_nsm() {
+    delete[] rows;
+  }
+  constexpr static auto offset_of_col0() {
+    return offsetof(row, col0);
+  }
+  constexpr static auto offset_of_col1() {
+    return offsetof(row, col1);
   }
 };
+
+void transform(table_dsm & src, table_nsm const & dst) {
+  for (size_t i = 0; i < src.row_count; ++i) {
+    dst.rows[i].col0 = src.col0[i];
+    dst.rows[i].col1 = src.col1[i];
+  }
+}

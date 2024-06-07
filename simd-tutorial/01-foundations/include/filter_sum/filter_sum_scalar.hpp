@@ -23,7 +23,7 @@
 #include <cstddef>
 
 
-void filter_eq_sum_tsl(
+void filter_eq_sum_scalar(
   uint32_t * __restrict__ dst, 
   uint32_t const * __restrict__ to_filter, 
   uint32_t const value,

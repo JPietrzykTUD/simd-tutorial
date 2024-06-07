@@ -27,31 +27,6 @@
 #include "map.hpp"
 
 
-
-struct simple_map_soa {
-  uint32_t * const keys;
-  uint32_t * const values;
-  size_t const entry_count;
-  uint32_t const empty_bucket_value;
-  uint32_t const empty_value;
-  explicit simple_map_soa(size_t entry_count, uint32_t ebv = 0, uint32_t evv = 0)
-  : keys(new uint32_t[entry_count]),
-    values(new uint32_t[entry_count]),
-    entry_count(entry_count),
-    empty_bucket_value(ebv),
-    empty_value(evv) {
-      std::fill(keys, keys + entry_count, empty_bucket_value);
-      std::fill(values, values + entry_count, empty_value);
-  }
-  simple_map_soa(simple_map_soa const & f) = default;
-  simple_map_soa(simple_map_soa && f) = default;
-  ~simple_map_soa() {
-    delete[] keys;
-    delete[] values;
-  }
-};
-
-
 auto group_sum_avx2(
   simple_map_soa & dst,
   uint32_t const * __restrict__ group_keys,
