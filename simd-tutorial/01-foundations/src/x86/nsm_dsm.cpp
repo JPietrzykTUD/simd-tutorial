@@ -8,8 +8,8 @@
 
 int main() {
   uint32_t result_scalar, result_dsm, result_nsm;
-  constexpr size_t element_count = 1 << 26;
-
+  const size_t element_count = 1 << 26;
+  
   table_dsm tab_dsm{element_count};
   table_nsm tab_nsm{element_count};
 
@@ -24,6 +24,6 @@ int main() {
   
   verify(result_scalar == result_dsm);
   verify(result_dsm == result_nsm);
-
+  
   return 0;
 }

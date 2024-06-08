@@ -32,6 +32,8 @@
 #define FORCE_INLINE __attribute__((always_inline)) inline
 #endif
 
+
+
 FORCE_INLINE void filter_eq_sum_nsm_avx2(
   uint32_t * __restrict__ dst, 
   table_nsm const & data,
@@ -46,7 +48,7 @@ FORCE_INLINE void filter_eq_sum_nsm_avx2(
   /* Initialize result and pointers for SIMD processing */
   __m256i result_vec = _mm256_setzero_si256();
   __m256i const pred_vec = _mm256_set1_epi32(value);
-  __m256i const index_inc_vec = _mm256_set1_epi32(sizeof(table_nsm::row));
+  __m256i const index_inc_vec = _mm256_set1_epi32(sizeof(table_nsm::row)*8);
   __m256i const col0_inc_vec = _mm256_set1_epi32(offsetof(table_nsm::row, col0));
   __m256i const col1_inc_vec = _mm256_set1_epi32(offsetof(table_nsm::row, col1));
   __m256i index_vec = _mm256_set_epi32(

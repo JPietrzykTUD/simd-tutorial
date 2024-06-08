@@ -21,7 +21,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include "tslintrin.hpp"
+#include "tsl/tsl.hpp"
 
 
 #ifdef COMPILER_EXPLORER

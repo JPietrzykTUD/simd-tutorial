@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <algorithm>
 
-#include "tslintrin.hpp"
+#include "tsl/tsl.hpp"
 
 template<class SimdT>
 struct simple_map_soa {

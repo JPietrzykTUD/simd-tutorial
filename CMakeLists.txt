@@ -13,6 +13,7 @@ set(TUTORIAL_INCLUDE_DIRECTORIES
 
 if (PLATFORM STREQUAL "x86")
   add_subdirectory(${PROJECT_SOURCE_DIR}/simd-tutorial/01-foundations/src/x86)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/simd-tutorial/02-abstraction/src/x86)
 
 elseif(PLATFORM STREQUAL "arm")
   

@@ -7,7 +7,7 @@
 
 int main() {
   uint32_t result_scalar, result_avx2;
-  constexpr size_t element_count = 1 << 26;
+  const size_t element_count = 1 << 26;
   auto to_group = new uint32_t[element_count];
   auto to_sum = new uint32_t[element_count];
 

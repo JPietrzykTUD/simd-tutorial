@@ -67,3 +67,18 @@ void transform(table_dsm & src, table_nsm const & dst) {
     dst.rows[i].col1 = src.col1[i];
   }
 }
+
+
+
+#include <array>
+#include <immintrin.h>
+#include <iostream>
+#include <iomanip>
+void print_vec(__m256i const & data, int idx = 0) {
+  std::array<uint32_t, 8> tmp{};
+  _mm256_storeu_si256(reinterpret_cast<__m256i*>(tmp.data()), data);
+  for (auto i = 0; i < 8; ++i) {
+    std::cout << "[" << std::setw(4) << (idx + i) << "]: " << std::setw(4) << tmp[i] << " ";
+  }
+  std::cout << std::endl;
+}

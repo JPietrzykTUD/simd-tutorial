@@ -55,6 +55,7 @@ FORCE_INLINE void filter_eq_sum_dsm_avx2(
   auto const to_filter_src_end = to_filter_remainder + remainder;
   auto to_sum_remainder = to_sum + element_count;
   /* Start SIMD processing*/ 
+
   while (to_filter_simd_current != to_filter_simd_end) {
     __m256i to_filter_vec = _mm256_loadu_si256(to_filter_simd_current);
     __m256i to_sum_vec = _mm256_loadu_si256(to_sum_simd_current);
