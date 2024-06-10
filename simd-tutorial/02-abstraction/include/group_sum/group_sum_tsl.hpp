@@ -27,30 +27,7 @@
 
 #include "tsl/tsl.hpp"
 
-template<class SimdT>
-struct simple_map_soa {
-  using T = typename SimdT::base_type;
-  T * const keys;
-  T * const values;
-  size_t const entry_count;
-  T const empty_bucket_value;
-  T const empty_value;
-  explicit simple_map_soa(size_t entry_count, T ebv = 0, T evv = 0)
-  : keys(new T[entry_count]),
-    values(new T[entry_count]),
-    entry_count(entry_count),
-    empty_bucket_value(ebv),
-    empty_value(evv) {
-      std::fill(keys, keys + entry_count, empty_bucket_value);
-      std::fill(values, values + entry_count, empty_value);
-  }
-  simple_map_soa(simple_map_soa const & f) = default;
-  simple_map_soa(simple_map_soa && f) = default;
-  ~simple_map_soa() {
-    delete[] keys;
-    delete[] values;
-  }
-};
+#include "map.hpp"
 
 template<class SimdT>
 auto group_sum_tsl(

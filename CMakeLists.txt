@@ -1,13 +1,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(SimdTutorial)
 
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 set(TUTORIAL_CXX_STANDARD 20)
 set(TURORIAL_BIN_ROOT ${PROJECT_SOURCE_DIR}/bin)
 
 set(PLATFORM "x86" CACHE STRING "Platform specifier")
 
-set(TUTORIAL_INCLUDE_DIRECTORIES
+set(TUTORIAL_INCLUDE_DIRECTORIES_FOUNDATIONS
   ${PROJECT_SOURCE_DIR}/simd-tutorial/01-foundations/include
+)
+set(TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION
   ${PROJECT_SOURCE_DIR}/simd-tutorial/02-abstraction/include
 )
 

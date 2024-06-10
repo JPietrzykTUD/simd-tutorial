@@ -6,15 +6,34 @@
 #include "aggregation/sum_scalar.hpp"
 #include "aggregation/sum_avx2.hpp"
 #include "aggregation/sum_tsl.hpp"
+#include "aggregation/sum_tsl_runtime.hpp"
+
+
+tsl::executor<tsl::runtime::cpu> tsl_exec{};
+template<typename T>
+static constexpr auto available_parallelism = tsl::runtime::cpu::available_parallelism<T>();
+
+
 
 template<typename T>
 void sum_test_type(size_t const element_count) {
+  std::cout << "Executing sum for type " << tsl::type_name<T>() << std::endl;
   auto data = new T[element_count];
   fill<T>(data, element_count, 0, 100);
   T result_scalar, result_avx2, result_tsl;
+  T result_tsl_execs[available_parallelism<T>.size()];
   aggregate_sum_scalar<T>(&result_scalar, data, element_count);
   aggregate_sum_avx2<T>(&result_avx2, data, element_count);
-  aggregate_sum_tsl<T>(&result_tsl, data, element_count);
+  aggregate_sum_tsl<tsl::simd<T, tsl::avx2>>(&result_tsl, data, element_count);
+
+  auto run_all_available = [&]<size_t... Is>(std::index_sequence<Is...>) {
+    (tsl_exec.submit<T, available_parallelism<T>[Is], aggregate_sum>(&result_tsl_execs[Is], data, element_count), ...);
+    for (auto const& result_tsl_exec : result_tsl_execs) {
+      verify(result_scalar == result_tsl_exec);
+    }
+    
+  };
+  run_all_available(std::make_index_sequence<available_parallelism<T>.size()>{});
   verify(result_scalar == result_avx2);
   verify(result_scalar == result_tsl);
   delete[] data;

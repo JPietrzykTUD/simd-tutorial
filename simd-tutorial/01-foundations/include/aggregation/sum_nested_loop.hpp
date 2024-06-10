@@ -21,12 +21,8 @@
 
 #include <cstdint>
 #include <cstddef>
+#include "../preprocessor.hpp"
 
-#ifdef COMPILER_EXPLORER
-#define FORCE_INLINE
-#else
-#define FORCE_INLINE __attribute__((always_inline)) inline
-#endif
 
 #ifndef VECTOR_COUNT
 #define VECTOR_COUNT 4
@@ -37,19 +33,19 @@ FORCE_INLINE void aggregate_sum_nested_loop(uint32_t * __restrict__ dst, uint32_
   const auto remainder = element_count & (VECTOR_COUNT - 1);
   element_count -= remainder;
   /* Initialize result and pointers for SIMD processing */
-  uint32_t result_arr[VECTOR_COUNT] = {};
+  uint32_t result_vec[VECTOR_COUNT] = {};
   uint32_t const * const src_simd_end = src + element_count;
   auto const src_end = src_simd_end + remainder;
   while (src != src_simd_end) {
     #pragma unroll
     for (auto i = 0u; i < VECTOR_COUNT; ++i) {
-      result_arr[i] += src[i];
+      result_vec[i] += src[i];
     }
     src += VECTOR_COUNT;
   }
   uint32_t result = 0;
   for (auto i = 0u; i < VECTOR_COUNT; ++i) {
-    result += result_arr[i];
+    result += result_vec[i];
   }
   while (src != src_end) {
     result += *src++;

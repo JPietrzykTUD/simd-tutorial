@@ -23,11 +23,7 @@
 #include <cstddef>
 #include "tsl/tsl.hpp"
 
-
-#ifdef COMPILER_EXPLORER
-#undef FORCE_INLINE
-#define FORCE_INLINE
-#endif
+#include "../preprocessor.hpp"
 
 template<class SimdT>
 FORCE_INLINE void filter_eq_sum_tsl(
@@ -41,7 +37,7 @@ FORCE_INLINE void filter_eq_sum_tsl(
   const auto remainder = element_count & (SimdT::vector_element_count() - 1);
   element_count -= remainder;
   /* Initialize result and pointers for SIMD processing */
-  auto result_vec = tsl::setzero<SimdT>();
+  auto result_vec = tsl::set_zero<SimdT>();
   auto pred_vec = tsl::set1<SimdT>(value);
   auto const to_filter_simd_end = to_filter + element_count;
   /* Calculate pointers for remainder processing */

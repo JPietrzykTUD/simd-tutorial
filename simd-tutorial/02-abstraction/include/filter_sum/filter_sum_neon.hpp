@@ -25,7 +25,10 @@
 
 #include "../preprocessor.hpp"
 
+template<typename T>
+void filter_eq_sum_neon(T * dst, T const * to_filter, T const value, T const * to_sum, size_t element_count);
 
+template<>
 FORCE_INLINE void filter_eq_sum_neon(
   uint32_t * __restrict__ dst, 
   uint32_t const * __restrict__ to_filter, 
@@ -65,3 +68,42 @@ FORCE_INLINE void filter_eq_sum_neon(
   *dst = result;
 }
 
+template<>
+FORCE_INLINE void filter_eq_sum_neon(
+  uint64_t * __restrict__ dst, 
+  uint64_t const * __restrict__ to_filter, 
+  uint64_t const value,
+  uint64_t const * __restrict__ to_sum,
+  size_t element_count
+) {
+  /* Calculate pointers for SIMD processing and scalar remainder */
+  const auto remainder = element_count & 0x3;
+  element_count -= remainder;
+  /* Initialize result and pointers for SIMD processing */
+  uint64x2_t result_vec = vdupq_n_u64(0);
+  uint64x2_t const pred_vec = vdupq_n_u64(value);
+  auto const to_filter_simd_end = to_filter + element_count;
+  /* Calculate pointers for remainder processing */
+  auto const to_filter_end = to_filter + remainder;
+  auto to_sum_remainder = to_sum + element_count;
+  /* Start SIMD processing*/ 
+  while (to_filter != to_filter_simd_end) {
+    uint64x2_t to_filter_vec = vld1q_u64(to_filter);
+    uint64x2_t to_sum_vec = vld1q_u64(to_sum);
+    uint64x2_t eq_mask = vceqq_u64(to_filter_vec, pred_vec);
+    uint64x2_t to_sum_adder = vandq_u64(eq_mask, to_sum_vec);
+    result_vec = vaddq_u64(result_vec, to_sum_adder);
+    to_filter += 2;
+    to_sum += 2;
+  }
+  uint32_t result = vaddvq_u64(result_vec);
+  /* Start remainder processing */
+  while (to_filter != to_filter_end) {
+    if (*to_filter == value) {
+      result += *to_sum_remainder;
+    }
+    ++to_filter;
+    ++to_sum_remainder;
+  }
+  *dst = result;
+}

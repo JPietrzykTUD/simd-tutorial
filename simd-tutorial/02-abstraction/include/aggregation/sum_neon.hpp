@@ -21,38 +21,57 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <immintrin.h>
+#include <neon.h>
 
 #include "../preprocessor.hpp"
 
+template<typename T>
+void aggregate_sum_neon(T * dst, T const * src, size_t element_count);
 
-FORCE_INLINE void aggregate_sum_sse(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+template<>
+FORCE_INLINE void aggregate_sum_neon(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   /* Calculate pointers for SIMD processing and scalar remainder */
   const auto remainder = element_count & 0x3;
   element_count -= remainder;
   /* Initialize result and pointers for SIMD processing */
-  __m128i result_vec = _mm_setzero_si128();
-  __m128i const * const src_simd_end = reinterpret_cast<__m128i const *>(src + element_count);
-  __m128i const * src_simd_current = reinterpret_cast<__m128i const *>(src);
+  uint32x4_t result_vec = vdupq_n_u32(0);
+  uint32_t const * const src_simd_end = reinterpret_cast<uint32_t const *>(src + element_count);
   /* Calculate pointers for remainder processing */
-  auto src_remainder = src + element_count;
-  auto const src_end = src_remainder + remainder;
+  auto const src_end = src_simd_end + remainder;
   /* Start SIMD processing*/
-  while (src_simd_current != src_simd_end) {
-    __m128i src_vec = _mm_loadu_si128(src_simd_current);
-    result_vec = _mm_add_epi32(result_vec, src_vec);
-    ++src_simd_current;
+  while (src != src_simd_end) {
+    uint32x4_t src_vec = vld1q_u32(src);
+    result_vec = vaddq_u32(result_vec, src_vec);
+    src += 4;
   }
-
-  auto res1 = _mm_srli_si128(result_vec, 8);
-  result_vec = _mm_add_epi32(result_vec, res1);
-  auto res2 = _mm_srli_si128(result_vec, 4);
-  result_vec = _mm_add_epi32(result_vec, res2);
-  uint32_t result = _mm_cvtsi128_si32(result_vec);
+  uint32_t result = vaddvq_u32(result_vec);
   /* Start remainder processing */
-  while (src_remainder != src_end) {
+  while (src != src_end) {
     result += *src++;
   }
   *dst = result;
 }
 
+template<>
+FORCE_INLINE void aggregate_sum_neon(uint64_t * __restrict__ dst, uint64_t const * __restrict__ src, size_t element_count) {
+  /* Calculate pointers for SIMD processing and scalar remainder */
+  const auto remainder = element_count & 0x1;
+  element_count -= remainder;
+  /* Initialize result and pointers for SIMD processing */
+  uint64x2_t result_vec = vdupq_n_u64(0);
+  uint64_t const * const src_simd_end = reinterpret_cast<uint64_t const *>(src + element_count);
+  /* Calculate pointers for remainder processing */
+  auto const src_end = src_simd_end + remainder;
+  /* Start SIMD processing*/
+  while (src != src_simd_end) {
+    uint64x2_t src_vec = vld1q_u64(src);
+    result_vec = vaddq_u64(result_vec, src_vec);
+    src += 2;
+  }
+  uint64_t result = vaddvq_u64(result_vec);
+  /* Start remainder processing */
+  while (src != src_end) {
+    result += *src++;
+  }
+  *dst = result;
+}

@@ -22,14 +22,11 @@
 #include <cstdint>
 #include <cstddef>
 
-#ifdef COMPILER_EXPLORER
-#define FORCE_INLINE
-#else
-#define FORCE_INLINE __attribute__((always_inline)) inline
-#endif
+#include "../preprocessor.hpp"
+
 
 template<typename T>
-FORCE_INLINE void aggregate_scalar(T * __restrict__ dst, T const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_scalar(T * __restrict__ dst, T const * __restrict__ src, size_t element_count) {
   T result = 0;
   for(auto i = 0ull; i < element_count; ++i) {
     result += src[i];

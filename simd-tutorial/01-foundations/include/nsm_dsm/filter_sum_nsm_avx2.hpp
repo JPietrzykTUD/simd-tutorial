@@ -23,14 +23,10 @@
 #include <cstddef>
 #include <immintrin.h>
 
+#include "../preprocessor.hpp"
 #include "table.hpp"
 
 
-#ifdef COMPILER_EXPLORER
-#define FORCE_INLINE
-#else
-#define FORCE_INLINE __attribute__((always_inline)) inline
-#endif
 
 
 

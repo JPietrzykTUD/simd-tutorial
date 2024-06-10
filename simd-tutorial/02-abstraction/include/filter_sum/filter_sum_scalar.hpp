@@ -22,15 +22,15 @@
 #include <cstdint>
 #include <cstddef>
 
-
+template<typename T>
 void filter_eq_sum_tsl(
-  uint32_t * __restrict__ dst, 
-  uint32_t const * __restrict__ to_filter, 
-  uint32_t const value,
-  uint32_t const * __restrict__ to_sum,
+  T * __restrict__ dst, 
+  T const * __restrict__ to_filter, 
+  T const value,
+  T const * __restrict__ to_sum,
   size_t element_count
 ) {
-  uint32_t result = 0;
+  T result = 0;
   for (auto i = 0ull; i < element_count; ++i) {
     if (to_filter[i] == value) {
       result += to_sum[i];

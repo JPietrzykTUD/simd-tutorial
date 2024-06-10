@@ -25,12 +25,11 @@
 
 #include "map.hpp"
 
-
-
+template<typename T>
 auto group_sum_scalar(
-  simple_map_soa & dst,
-  uint32_t const * __restrict__ group_keys,
-  uint32_t const * __restrict__ group_values,
+  simple_map_soa<T> & dst,
+  T const * __restrict__ group_keys,
+  T const * __restrict__ group_values,
   size_t element_count
 ) -> size_t {
   size_t const map_element_count = dst.entry_count;

@@ -21,12 +21,7 @@
 
 #include <cstdint>
 #include <cstddef>
-
-#ifdef COMPILER_EXPLORER
-#define FORCE_INLINE
-#else
-#define FORCE_INLINE __attribute__((always_inline)) inline
-#endif
+#include "../preprocessor.hpp"
 
 FORCE_INLINE void aggregate_sum_scalar(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   uint32_t result = 0;

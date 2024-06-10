@@ -23,23 +23,19 @@
 #include <cstddef>
 #include <immintrin.h>
 
+#include "../preprocessor.hpp"
 
-#ifdef COMPILER_EXPLORER
-#define FORCE_INLINE
-#else
-#define FORCE_INLINE __attribute__((always_inline)) inline
-#endif
 
 template<typename T>
 void aggregate_sum_avx2(T * dst, T const * src, size_t element_count);
 
 template<>
-FORCE INLINE void aggregate_sum_avx2(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_avx2(uint32_t * __restrict__ dst, uint32_t const * __restrict__ src, size_t element_count) {
   /* Calculate pointers for SIMD processing and scalar remainder */
   const auto remainder = element_count & 0x7;
   element_count -= remainder;
   /* Initialize result and pointers for SIMD processing */
-  __m256i result_arr = _mm256_setzero_si256();
+  __m256i result_vec = _mm256_setzero_si256();
   __m256i const * const src_simd_end = reinterpret_cast<__m256i const *>(src + element_count);
   __m256i const * src_simd_current = reinterpret_cast<__m256i const *>(src);
   /* Calculate pointers for remainder processing */
@@ -48,17 +44,17 @@ FORCE INLINE void aggregate_sum_avx2(uint32_t * __restrict__ dst, uint32_t const
   /* Start SIMD processing*/ 
   while (src_simd_current != src_simd_end) {
     __m256i src_vec = _mm256_loadu_si256(src_simd_current);
-    result_arr = _mm256_add_epi32(result_arr, src_vec);
+    result_vec = _mm256_add_epi32(result_vec, src_vec);
     ++src_simd_current;
   }
 
-  auto res1 = _mm256_srli_si256(result_arr, 8);
-  result_arr = _mm256_add_epi32(result_arr, res1);
-  auto res2 = _mm256_srli_si256(result_arr, 4);
-  result_arr = _mm256_add_epi32(result_arr, res2);
-  auto upper = _mm256_permute2f128_si256(result_arr, result_arr, 0x1);
-  result_arr = _mm256_add_epi32(result_arr, upper);
-  uint32_t result = _mm256_cvtsi256_si32(result_arr);
+  auto res1 = _mm256_srli_si256(result_vec, 8);
+  result_vec = _mm256_add_epi32(result_vec, res1);
+  auto res2 = _mm256_srli_si256(result_vec, 4);
+  result_vec = _mm256_add_epi32(result_vec, res2);
+  auto upper = _mm256_permute2f128_si256(result_vec, result_vec, 0x1);
+  result_vec = _mm256_add_epi32(result_vec, upper);
+  uint32_t result = _mm256_cvtsi256_si32(result_vec);
   /* Start remainder processing */
   while (src_remainder != src_end) {
     result += *src++;
@@ -67,12 +63,12 @@ FORCE INLINE void aggregate_sum_avx2(uint32_t * __restrict__ dst, uint32_t const
 }
 
 template<>
-FORCE INLINE void aggregate_sum_avx2(uint64_t * __restrict__ dst, uint64_t const * __restrict__ src, size_t element_count) {
+FORCE_INLINE void aggregate_sum_avx2(uint64_t * __restrict__ dst, uint64_t const * __restrict__ src, size_t element_count) {
   /* Calculate pointers for SIMD processing and scalar remainder */
   const auto remainder = element_count & 0x3;
   element_count -= remainder;
   /* Initialize result and pointers for SIMD processing */
-  __m256i result_arr = _mm256_setzero_si256();
+  __m256i result_vec = _mm256_setzero_si256();
   __m256i const * const src_simd_end = reinterpret_cast<__m256i const *>(src + element_count);
   __m256i const * src_simd_current = reinterpret_cast<__m256i const *>(src);
   /* Calculate pointers for remainder processing */
@@ -81,15 +77,15 @@ FORCE INLINE void aggregate_sum_avx2(uint64_t * __restrict__ dst, uint64_t const
   /* Start SIMD processing*/ 
   while (src_simd_current != src_simd_end) {
     __m256i src_vec = _mm256_loadu_si256(src_simd_current);
-    result_arr = _mm256_add_epi64(result_arr, src_vec);
+    result_vec = _mm256_add_epi64(result_vec, src_vec);
     ++src_simd_current;
   }
 
-  auto res1 = _mm256_srli_si256(result_arr, 8);
-  result_arr = _mm256_add_epi64(result_arr, res1);
-  auto upper = _mm256_permute2f128_si256(result_arr, result_arr, 0x1);
-  result_arr = _mm256_add_epi64(result_arr, upper);
-  uint64_t result = _mm256_extract_epi64(result_arr, 0);
+  auto res1 = _mm256_srli_si256(result_vec, 8);
+  result_vec = _mm256_add_epi64(result_vec, res1);
+  auto upper = _mm256_permute2f128_si256(result_vec, result_vec, 0x1);
+  result_vec = _mm256_add_epi64(result_vec, upper);
+  uint64_t result = _mm256_extract_epi64(result_vec, 0);
   /* Start remainder processing */
   while (src_remainder != src_end) {
     result += *src++;

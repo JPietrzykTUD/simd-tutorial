@@ -23,15 +23,16 @@
 #include <cstddef>
 #include <algorithm>
 
+template<typename T>
 struct simple_map_soa {
-  uint32_t * const keys;
-  uint32_t * const values;
+  T * const keys;
+  T * const values;
   size_t const entry_count;
-  uint32_t const empty_bucket_value;
-  uint32_t const empty_value;
-  explicit simple_map_soa(size_t entry_count, uint32_t ebv = 0, uint32_t evv = 0)
-  : keys(new uint32_t[entry_count]),
-    values(new uint32_t[entry_count]),
+  T const empty_bucket_value;
+  T const empty_value;
+  explicit simple_map_soa(size_t entry_count, T ebv = 0, T evv = 0)
+  : keys(new T[entry_count]),
+    values(new T[entry_count]),
     entry_count(entry_count),
     empty_bucket_value(ebv),
     empty_value(evv) {
