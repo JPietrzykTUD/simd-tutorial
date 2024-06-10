@@ -22,27 +22,48 @@
 #include <cstdint>
 #include <cstddef>
 #include <algorithm>
+#include <unordered_map>
+
+#include <memory>
 
 template<typename T>
 struct simple_map_soa {
-  T * const keys;
-  T * const values;
+  std::shared_ptr<T> const _keys;
+  std::shared_ptr<T> const _values;
   size_t const entry_count;
   T const empty_bucket_value;
   T const empty_value;
   explicit simple_map_soa(size_t entry_count, T ebv = 0, T evv = 0)
-  : keys(new T[entry_count]),
-    values(new T[entry_count]),
+  : _keys(new T[entry_count]),
+    _values(new T[entry_count]),
     entry_count(entry_count),
     empty_bucket_value(ebv),
     empty_value(evv) {
-      std::fill(keys, keys + entry_count, empty_bucket_value);
-      std::fill(values, values + entry_count, empty_value);
+      std::fill(_keys.get(), _keys.get() + entry_count, empty_bucket_value);
+      std::fill(_values.get(), _values.get() + entry_count, empty_value);
   }
   simple_map_soa(simple_map_soa const & f) = default;
   simple_map_soa(simple_map_soa && f) = default;
-  ~simple_map_soa() {
-    delete[] keys;
-    delete[] values;
+
+  auto keys() const {
+    return _keys.get();
+  }
+  auto values() const {
+    return _values.get();
+  }
+
+  bool operator==(simple_map_soa<T> const & right) const {
+    if (entry_count != right.entry_count) {   
+      return false;
+    }
+    std::unordered_map<T, T> left_map;
+    std::unordered_map<T, T> right_map;
+
+    for (auto i = 0; i < entry_count; ++i) {
+      left_map[keys()[i]] = values()[i];
+      right_map[right.keys()[i]] = right.values()[i];
+    }
+
+    return (left_map == right_map);
   }
 };

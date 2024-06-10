@@ -37,8 +37,10 @@ auto group_sum_scalar(
   // map to store (key -> idx) pairs
   // idx is used to find key and value in dst (thus, the result is densely packed)
   simple_map_soa group_state(map_element_count, dst.empty_bucket_value);
-  auto * const map_keys = group_state.keys;
-  auto * const map_values = group_state.values;
+  auto map_keys = group_state.keys();
+  auto map_values = group_state.values();
+  auto dst_keys = dst.keys();
+  auto dst_values = dst.values();
 
   auto const end = group_keys + element_count;
   auto const all_false_mask = 0;
@@ -51,14 +53,14 @@ auto group_sum_scalar(
     while (true) {
       pos_hint = pos_hint % map_element_count;
       if (map_keys[pos_hint] == key) {
-        dst.values[*(map_values + pos_hint)] += value;
+        dst_values[*(map_values + pos_hint)] += value;
         break;
       }
       if (map_keys[pos_hint] == dst.empty_bucket_value) {
         map_keys[pos_hint] = key;
         map_values[pos_hint] = groups_count;
-        dst.keys[groups_count] = key;
-        dst.values[groups_count] = value;
+        dst_keys[groups_count] = key;
+        dst_values[groups_count] = value;
         ++groups_count;
         break;
       }

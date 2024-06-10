@@ -15,7 +15,6 @@
   You should have received a copy of the GNU General Public License
   along with this program. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************************************************************/
-#include <unordered_map>
 #ifndef COMPILER_EXPLORER
 #pragma once
 #endif
@@ -23,6 +22,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <algorithm>
+#include <unordered_map>
 
 struct simple_map_soa {
   uint32_t * const keys;

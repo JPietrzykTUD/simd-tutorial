@@ -23,7 +23,7 @@
 #include <cstddef>
 
 template<typename T>
-void filter_eq_sum_tsl(
+void filter_eq_sum_scalar(
   T * __restrict__ dst, 
   T const * __restrict__ to_filter, 
   T const value,

@@ -31,18 +31,20 @@
 
 template<class SimdT>
 auto group_sum_tsl(
-  simple_map_soa<SimdT> & dst,
-  typename SimdT::base_t const * __restrict__ group_keys,
-  typename SimdT::base_t const * __restrict__ group_values,
+  simple_map_soa<typename SimdT::base_type> & dst,
+  typename SimdT::base_type const * __restrict__ group_keys,
+  typename SimdT::base_type const * __restrict__ group_values,
   size_t element_count
 ) -> size_t {
   size_t const map_element_count = dst.entry_count;
   size_t groups_count = 0;
   // map to store (key -> idx) pairs
   // idx is used to find key and value in dst (thus, the result is densely packed)
-  simple_map_soa<SimdT> group_state(map_element_count, dst.empty_bucket_value);
-  auto * const map_keys = group_state.keys;
-  auto * const map_values = group_state.values;
+  simple_map_soa<typename SimdT::base_type> group_state(map_element_count, dst.empty_bucket_value);
+  auto map_keys = group_state.keys();
+  auto map_values = group_state.values();
+  auto dst_keys = dst.keys();
+  auto dst_values = dst.values();
 
   auto const end = group_keys + element_count;
   auto const empty_bucket_vec = tsl::set1<SimdT>(dst.empty_bucket_value);
@@ -60,16 +62,16 @@ auto group_sum_tsl(
       auto const key_found_mask = tsl::equal_as_imask<SimdT>(map_keys_vec, key_vec);
       if (tsl::nequal<SimdT>(key_found_mask, all_false_mask)) {
         auto const found_position = tsl::tzc<SimdT>(key_found_mask);
-        dst.values[*(map_values + pos_hint + found_position)] += value;
+        dst_values[*(map_values + pos_hint + found_position)] += value;
         break;
       }
       auto const empty_bucket_found_mask = tsl::equal_as_imask<SimdT>(map_keys_vec, empty_bucket_vec);
-      if (tsl::nequal<SimdT, Idof>(empty_bucket_found_mask, all_false_mask)) {
+      if (tsl::nequal<SimdT>(empty_bucket_found_mask, all_false_mask)) {
         auto const empty_bucket_position = tsl::tzc<SimdT>(empty_bucket_found_mask);
         map_keys[pos_hint + empty_bucket_position] = key;
         map_values[pos_hint + empty_bucket_position] = groups_count;
-        dst.keys[groups_count] = key;
-        dst.values[groups_count] = value;
+        dst_keys[groups_count] = key;
+        dst_values[groups_count] = value;
         ++groups_count;
         break;
       }
