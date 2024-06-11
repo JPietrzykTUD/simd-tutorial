@@ -7,7 +7,7 @@ set_target_properties(abstraction_x86_aggregate_sum PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(abstraction_x86_aggregate_sum PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION})
-target_compile_options(abstraction_x86_aggregate_sum PRIVATE -mavx2 -flax-vector-conversions)
+target_compile_options(abstraction_x86_aggregate_sum PRIVATE -march=native -flax-vector-conversions)
 target_compile_definitions(abstraction_x86_aggregate_sum PUBLIC TSL_USE_CONCEPTS)
 
 add_executable(abstraction_x86_filter_sum filter_sum.cpp)
@@ -19,7 +19,7 @@ set_target_properties(abstraction_x86_filter_sum PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(abstraction_x86_filter_sum PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION})
-target_compile_options(abstraction_x86_filter_sum PRIVATE -mavx2 -flax-vector-conversions)
+target_compile_options(abstraction_x86_filter_sum PRIVATE -march=native -flax-vector-conversions)
 target_compile_definitions(abstraction_x86_filter_sum PUBLIC TSL_USE_CONCEPTS)
 
 add_executable(abstraction_x86_group_sum group_sum.cpp)
@@ -31,7 +31,7 @@ set_target_properties(abstraction_x86_group_sum PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(abstraction_x86_group_sum PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION})
-target_compile_options(abstraction_x86_group_sum PRIVATE -mavx2 -flax-vector-conversions)
+target_compile_options(abstraction_x86_group_sum PRIVATE -march=native -flax-vector-conversions)
 target_compile_definitions(abstraction_x86_group_sum PUBLIC TSL_USE_CONCEPTS)
 
 add_executable(abstraction_x86_nsm_dsm nsm_dsm.cpp)
@@ -43,5 +43,5 @@ set_target_properties(abstraction_x86_nsm_dsm PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(abstraction_x86_nsm_dsm PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION})
-target_compile_options(abstraction_x86_nsm_dsm PRIVATE -mavx2 -flax-vector-conversions -fpermissive)
+target_compile_options(abstraction_x86_nsm_dsm PRIVATE -march=native -flax-vector-conversions -fpermissive)
 target_compile_definitions(abstraction_x86_nsm_dsm PUBLIC TSL_USE_CONCEPTS)

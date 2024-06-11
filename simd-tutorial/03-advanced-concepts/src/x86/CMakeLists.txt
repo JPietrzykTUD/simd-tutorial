@@ -7,5 +7,5 @@ set_target_properties(advanced_concepts_x86_nsm_dsm PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(advanced_concepts_x86_nsm_dsm PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ADVANCED})
-target_compile_options(advanced_concepts_x86_nsm_dsm PRIVATE -mavx2 -flax-vector-conversions -fpermissive)
+target_compile_options(advanced_concepts_x86_nsm_dsm PRIVATE -march=native -flax-vector-conversions -fpermissive)
 target_compile_definitions(advanced_concepts_x86_nsm_dsm PUBLIC TSL_USE_CONCEPTS)
