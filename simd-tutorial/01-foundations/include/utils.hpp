@@ -8,8 +8,7 @@
 #include <random>
 #include <algorithm>
 
-std::random_device rnd_device;
-std::mt19937 rnd_generator {rnd_device()};
+std::mt19937 rnd_generator {1337};
 
 inline void fill(uint32_t * data, size_t element_count, uint32_t lower, uint32_t upper) {
     std::uniform_int_distribution<uint32_t> dist{lower, upper};

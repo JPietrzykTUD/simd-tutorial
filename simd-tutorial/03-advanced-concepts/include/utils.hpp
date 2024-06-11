@@ -8,8 +8,7 @@
 #include <random>
 #include <algorithm>
 
-std::random_device rnd_device;
-std::mt19937 rnd_generator {rnd_device()};
+std::mt19937 rnd_generator {1337};
 
 template<typename T>
 inline void fill(T * data, size_t element_count, T lower, T upper) {
