@@ -42,7 +42,7 @@ else
       ;;
   esac
 fi
-FLAGS="${FLAGS} ${CCEXP_FLAGS}"
+FLAGS="${FLAGS} ${CCEXP_FLAGS} -fopt-info-vec-missed"
 
 if [ -z "$ADDITIONAL_FLAGS" ]; then
   FLAGS="${FLAGS}"
@@ -68,3 +68,4 @@ case $COMPILER in
 esac
 
 cexpl --compiler ${COMPILER} --compare --cflags "${FLAGS}" $FILE_PATH
+#

@@ -7,7 +7,7 @@ set_target_properties(foundations_x86_aggregate_sum PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(foundations_x86_aggregate_sum PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_FOUNDATIONS})
-target_compile_options(foundations_x86_aggregate_sum PRIVATE -march=native)
+target_compile_options(foundations_x86_aggregate_sum PRIVATE -march=native -fopt-info-vec-missed)
 
 add_executable(foundations_x86_filter_sum filter_sum.cpp)
 set_target_properties(foundations_x86_filter_sum PROPERTIES
@@ -18,7 +18,7 @@ set_target_properties(foundations_x86_filter_sum PROPERTIES
   INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 target_include_directories(foundations_x86_filter_sum PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_FOUNDATIONS})
-target_compile_options(foundations_x86_filter_sum PRIVATE -march=native)
+target_compile_options(foundations_x86_filter_sum PRIVATE -march=native -fopt-info-vec-missed )
 
 add_executable(foundations_x86_group_sum group_sum.cpp)
 set_target_properties(foundations_x86_group_sum PROPERTIES

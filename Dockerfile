@@ -79,7 +79,7 @@ RUN UNAME=$(uname -m) && \
     echo "CLANG_VERSION=${CLANG_VERSION}" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
     echo "CCEXP_CLANG=${CCEXP_CLANG}" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
     echo "CCEXP_GCC=${CCEXP_GCC}" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
-    echo "CCEXP_FLAGS=\"-O3 -std=c++20 -DCOMPILER_EXPLORER\"" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
+    echo "CCEXP_FLAGS=\"-O2 -std=c++20 -DCOMPILER_EXPLORER\"" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
     echo "CCEXP_SIMD_DEFAULT_FLAGS=\"-march=native\"" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
     echo "CCEXP_SSE_FLAGS=\"-msse -msse2 -mssse3 -msse4.1 -msse4.2\"" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
     echo "CCEXP_AVX_FLAGS=\"-msse -msse2 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2\"" >> ${TUTORIAL_SCRIPTS}/compiler_explorer.env && \
