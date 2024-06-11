@@ -34,3 +34,14 @@ target_include_directories(abstraction_x86_group_sum PRIVATE ${TUTORIAL_INCLUDE_
 target_compile_options(abstraction_x86_group_sum PRIVATE -mavx2 -flax-vector-conversions)
 target_compile_definitions(abstraction_x86_group_sum PUBLIC TSL_USE_CONCEPTS)
 
+add_executable(abstraction_x86_nsm_dsm nsm_dsm.cpp)
+target_compile_features(abstraction_x86_nsm_dsm PRIVATE cxx_std_20)
+set_target_properties(abstraction_x86_nsm_dsm PROPERTIES
+  CXX_STANDARD_REQUIRED ON 
+  RUNTIME_OUTPUT_DIRECTORY ${TURORIAL_BIN_ROOT}/02-abstraction
+  OUTPUT_NAME nsm_dsm
+  INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
+)
+target_include_directories(abstraction_x86_nsm_dsm PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION})
+target_compile_options(abstraction_x86_nsm_dsm PRIVATE -mavx2 -flax-vector-conversions -fpermissive)
+target_compile_definitions(abstraction_x86_nsm_dsm PUBLIC TSL_USE_CONCEPTS)

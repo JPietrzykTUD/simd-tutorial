@@ -1,0 +1,11 @@
+add_executable(advanced_concepts_x86_nsm_dsm nsm_dsm.cpp)
+target_compile_features(advanced_concepts_x86_nsm_dsm PRIVATE cxx_std_20)
+set_target_properties(advanced_concepts_x86_nsm_dsm PROPERTIES
+  CXX_STANDARD_REQUIRED ON 
+  RUNTIME_OUTPUT_DIRECTORY ${TURORIAL_BIN_ROOT}/03-advanced-concepts
+  OUTPUT_NAME nsm_dsm
+  INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
+)
+target_include_directories(advanced_concepts_x86_nsm_dsm PRIVATE ${TUTORIAL_INCLUDE_DIRECTORIES_ADVANCED})
+target_compile_options(advanced_concepts_x86_nsm_dsm PRIVATE -mavx2 -flax-vector-conversions -fpermissive)
+target_compile_definitions(advanced_concepts_x86_nsm_dsm PUBLIC TSL_USE_CONCEPTS)

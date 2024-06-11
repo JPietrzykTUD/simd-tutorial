@@ -38,6 +38,7 @@ struct group_sum {
     T3 group_values,
     T4 element_count
   ) -> size_t {
+    std::cout << "Using " << tsl::type_name<typename SimdT::target_extension>() << std::endl;
     size_t const map_element_count = dst.entry_count;
     size_t groups_count = 0;
     // map to store (key -> idx) pairs

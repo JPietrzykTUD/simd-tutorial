@@ -2,6 +2,7 @@
 #include <cstddef>
 
 #include "utils.hpp"
+#include "nsm_dsm/table.hpp"
 #include "filter_sum/filter_sum_scalar.hpp"
 #include "nsm_dsm/filter_sum_dsm_avx2.hpp"
 #include "nsm_dsm/filter_sum_nsm_avx2.hpp"

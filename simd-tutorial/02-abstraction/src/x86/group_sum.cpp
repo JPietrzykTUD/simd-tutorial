@@ -31,7 +31,6 @@ void group_sum_test_type(size_t const element_count) {
   group_sum_tsl<tsl::simd<T, tsl::avx2>>(result_tsl, to_group, to_sum, element_count);
 
   auto run_all_available = [&]<size_t... Is>(std::index_sequence<Is...>) {
-
     (tsl_exec.submit<T, available_parallelism<T>[Is], group_sum>(result_tsl_execs[Is], to_group, to_sum, element_count), ...);
     for (auto const& result_tsl_exec : result_tsl_execs) {
       verify(result_scalar == result_tsl_exec);

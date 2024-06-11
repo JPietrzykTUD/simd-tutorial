@@ -21,49 +21,50 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <memory>
 
+template<typename T>
 struct table_dsm {
-  uint32_t * const col0;
-  uint32_t * const col1;
+  std::shared_ptr<T> const _col0;
+  std::shared_ptr<T> const _col1;
   size_t const row_count;
   explicit table_dsm(size_t row_count)
-  : col0(new uint32_t[row_count]),
-    col1(new uint32_t[row_count]),
+  : _col0(new T[row_count]),
+    _col1(new T[row_count]),
     row_count(row_count){ }
   table_dsm(table_dsm const & f) = default;
   table_dsm(table_dsm && f) = default;
-  ~table_dsm() {
-    delete[] col0;
-    delete[] col1;
-  }
+  auto col0() const { return _col0.get(); }
+  auto col1() const { return _col1.get(); }
 };
 
+template<typename T>
 struct table_nsm {
   struct row {
-    uint32_t col0;
-    uint32_t col1;
+    T col0;
+    T col1;
   };
-  row * const rows;
+  std::shared_ptr<row> const _rows;
   size_t const row_count;
   explicit table_nsm(size_t row_count)
-  : rows(new row[row_count]),
+  : _rows(new row[row_count]),
     row_count(row_count){ }
   table_nsm(table_nsm const & f) = default;
   table_nsm(table_nsm && f) = default;
-  ~table_nsm() {
-    delete[] rows;
-  }
   constexpr static auto offset_of_col0() {
     return offsetof(row, col0);
   }
   constexpr static auto offset_of_col1() {
     return offsetof(row, col1);
   }
+  auto rows() const { return _rows.get(); }
 };
 
-void transform(table_dsm & src, table_nsm const & dst) {
+template<typename T>
+void transform(table_dsm<T> & src, table_nsm<T> const & dst) {
   for (size_t i = 0; i < src.row_count; ++i) {
-    dst.rows[i].col0 = src.col0[i];
-    dst.rows[i].col1 = src.col1[i];
+    dst.rows()[i].col0 = src.col0()[i];
+    dst.rows()[i].col1 = src.col1()[i];
   }
 }
+

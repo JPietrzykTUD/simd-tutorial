@@ -22,48 +22,23 @@
 #include <cstdint>
 #include <cstddef>
 
-struct table_dsm {
-  uint32_t * const col0;
-  uint32_t * const col1;
-  size_t const row_count;
-  explicit table_dsm(size_t row_count)
-  : col0(new uint32_t[row_count]),
-    col1(new uint32_t[row_count]),
-    row_count(row_count){ }
-  table_dsm(table_dsm const & f) = default;
-  table_dsm(table_dsm && f) = default;
-  ~table_dsm() {
-    delete[] col0;
-    delete[] col1;
-  }
-};
+#include "table.hpp"
 
-struct table_nsm {
-  struct row {
-    uint32_t col0;
-    uint32_t col1;
-  };
-  row * const rows;
-  size_t const row_count;
-  explicit table_nsm(size_t row_count)
-  : rows(new row[row_count]),
-    row_count(row_count){ }
-  table_nsm(table_nsm const & f) = default;
-  table_nsm(table_nsm && f) = default;
-  ~table_nsm() {
-    delete[] rows;
-  }
-  constexpr static auto offset_of_col0() {
-    return offsetof(row, col0);
-  }
-  constexpr static auto offset_of_col1() {
-    return offsetof(row, col1);
-  }
-};
+template<typename T>
+void filter_eq_sum_dsm_scalar(
+  T * __restrict__ dst, 
+  table_dsm<T> const & data,
+  T const value
+) {
+  T result = 0;
+  auto element_count = data.row_count;
+  T const * to_filter = data.col0();
+  T const * to_sum = data.col1();
 
-void transform(table_dsm & src, table_nsm const & dst) {
-  for (size_t i = 0; i < src.row_count; ++i) {
-    dst.rows[i].col0 = src.col0[i];
-    dst.rows[i].col1 = src.col1[i];
+  for (auto i = 0ull; i < element_count; ++i) {
+    if (to_filter[i] == value) {
+      result += to_sum[i];
+    }
   }
+  *dst = result;
 }

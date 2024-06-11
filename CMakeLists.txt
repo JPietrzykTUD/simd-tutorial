@@ -13,10 +13,13 @@ set(TUTORIAL_INCLUDE_DIRECTORIES_FOUNDATIONS
 set(TUTORIAL_INCLUDE_DIRECTORIES_ABSTRACTION
   ${PROJECT_SOURCE_DIR}/simd-tutorial/02-abstraction/include
 )
-
+set(TUTORIAL_INCLUDE_DIRECTORIES_ADVANCED
+  ${PROJECT_SOURCE_DIR}/simd-tutorial/03-advanced-concepts/include
+)
 if (PLATFORM STREQUAL "x86")
   add_subdirectory(${PROJECT_SOURCE_DIR}/simd-tutorial/01-foundations/src/x86)
   add_subdirectory(${PROJECT_SOURCE_DIR}/simd-tutorial/02-abstraction/src/x86)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/simd-tutorial/03-advanced-concepts/src/x86)
 
 elseif(PLATFORM STREQUAL "arm")
   
