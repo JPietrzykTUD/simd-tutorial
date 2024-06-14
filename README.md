@@ -23,7 +23,8 @@ cd SIGMOD-SIMD-tutorial
 ```
 #### 4. Pull and tag the associated docker image, containing all the necessary tools and libraries for this tutorial. This may take a couple of minutes.
 ```bash
-docker pull jpietrzyktud/sigmod-simd-tutorial:latest && docker tag jpietrzyktud/sigmod-simd-tutorial:latest sigmod-simd
+docker pull jpietrzyktud/sigmod-simd-tutorial:latest
+docker tag jpietrzyktud/sigmod-simd-tutorial:latest sigmod-simd
 ```
 #### 5. Verify, that you are able to run the container and build the code
 ```bash
@@ -73,8 +74,7 @@ The following are some of the valid targets for this Makefile:
 
 | Part             |   Slide   | Command       |
 |:----------------:|:---------:|---------------|
-| 01 - Foundations |     27    |<pre>{docker run -v $(pwd):/tutorial/code -it sigmod-simd scripts/asm_inspect.sh code/simd-tutorial/01-foundations/include/aggregation/sum_scalar.hpp gcc}
-```
+| 01 - Foundations |     27    |```docker run -v $(pwd):/tutorial/code -it sigmod-simd scripts/asm_inspect.sh code/simd-tutorial/01-foundations/include/aggregation/sum_scalar.hpp gcc```
 | 01 - Foundations |     28    |... |
 | 01 - Foundations | 351.96002 |... |
 
