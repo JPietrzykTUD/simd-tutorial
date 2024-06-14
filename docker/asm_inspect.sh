@@ -42,7 +42,7 @@ else
       ;;
   esac
 fi
-FLAGS="${FLAGS} ${CCEXP_FLAGS} -fopt-info-vec-missed"
+FLAGS="${FLAGS} ${CCEXP_FLAGS}"
 
 if [ -z "$ADDITIONAL_FLAGS" ]; then
   FLAGS="${FLAGS}"
@@ -57,6 +57,7 @@ fi
 case $COMPILER in
   gcc)
     COMPILER="${CCEXP_GCC}"
+    FLAGS="${FLAGS} -fopt-info-vec-optimized"
     ;;
   clang)
     COMPILER="${CCEXP_CLANG}"
@@ -64,6 +65,7 @@ case $COMPILER in
   *)
     echo "Unknown compiler: ${COMPILER} using g++ as default"
     COMPILER="${CCEXP_GCC}"
+    FLAGS="${FLAGS} -fopt-info-vec-optimized"
     ;;
 esac
 
