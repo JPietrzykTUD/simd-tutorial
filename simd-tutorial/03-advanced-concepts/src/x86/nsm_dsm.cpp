@@ -1,3 +1,12 @@
+/**********************************************************************************
+  This file is part of the SIGMOD'24 tutorial: 
+  SIMDified Data Processing-Foundations, Abstraction, and Advanced Techniques [1].
+  Authors of the file: Johannes Pietrzyk, Dirk Habich.
+  [1] https://doi.org/10.1145/3626246.3654694
+  
+  This work is licensed under the terms of the MIT license.  
+  For a copy, see <https://opensource.org/licenses/MIT>.
+ ***********************************************************************************/
 #include <cstdint>
 #include <cstddef>
 #include <chrono>
